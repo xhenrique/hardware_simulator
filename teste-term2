@@ -1,0 +1,32 @@
+import requests
+import random
+import json
+import time
+v = 0
+counter = 0
+payload = "{\"bu\":\"default-unit\",\"e\":[{\"n\":\"fe8a8397-5d30-428a-b6d3-9e39e0a8356a/3303/0/5700\",\"u\":\"default-unit\",\"v\":370,\"bv\":null,\"sv\":null,\"t\":1522247338.384}]}"
+headers = {
+            'DataCollectorId': "42a413c2-d0a3-4135-a306-a5c97af19801",
+            'Authorization': "SharedAccessSignature sr=https%3a%2f%2fiotabusinesslab.servicebus.windows.net%2fdatacollectoroutbox%2fpublishers%2f42a413c2-d0a3-4135-a306-a5c97af19801%2fmessages&sig=WwSZI3sv2gkPadK0ccahoX4c6XqW03udTjDQ4jl5ZZM%3d&se=4674904690&skn=SendAccessPolicy",
+            'PayloadType': "application/senml+json",
+            'Content-Type': "application/json",
+            'Cache-Control': "no-cache",
+            'Postman-Token': "5bbcbc42-a08b-4659-b834-fa4766344191"
+}
+payload_json = json.loads(payload)
+end = False
+url = "https://iotabusinesslab.servicebus.windows.net/datacollectoroutbox/publishers/42a413c2-d0a3-4135-a306-a5c97af19801/messages"
+payload_json['e'][0]['v']=None
+payload_json['e'][0]['t']=None
+while end is not True:
+    print('Este é o payload ' + str(counter))
+    print(payload_json['e'][0]['v'])
+    print(payload_json['e'][0]['t'])
+    payload_json['e'][0]['v'] = v
+    payload_json['e'][0]['t'] = time.time()
+    response = requests.request("POST", url, json=payload_json, headers=headers)
+    print(response.status_code)
+    v= v + random.random()
+    counter+=1
+    time.sleep(3)
+
